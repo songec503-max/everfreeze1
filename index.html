@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>EVERFREEZE</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="site">
+  <header id="masthead">
+    <div class="logo">EVERFREEZE</div>
+    <div class="tagline" id="tagline"></div>
+  </header>
+  <nav id="nav"></nav>
+  <main id="page">
+    <div id="crumbs"></div>
+    <section id="caption">
+      <h2 id="ptitle"></h2>
+      <p id="pintro"></p>
+    </section>
+    <div id="cols">
+      <div id="stagewrap"><div id="stage"></div></div>
+      <aside id="side"></aside>
+    </div>
+    <p class="tip" id="tip">그림 속이나 오른쪽 목록의 링크를 눌러 보세요. <a href="#" id="hintLink">클릭할 수 있는 곳 표시하기</a></p>
+    <section id="panel"></section>
+    <section id="log" aria-live="polite"></section>
+    <section id="memo"></section>
+  </main>
+  <footer id="foot"><span id="counter"></span><span class="sep">|</span><span>Best viewed on PC · 1280px 이상 권장</span><span id="devSlot"></span></footer>
+</div>
+<!-- 데이터 -->
+<script src="src/data/texts.js"></script>
+<script src="src/data/npcs.js"></script>
+<script src="src/data/evidence.js"></script>
+<script src="src/data/deductions.js"></script>
+<script src="src/data/puzzles.js"></script>
+<script src="src/data/scenes.js"></script>
+<!-- 엔진 -->
+<script src="src/engine/state.js"></script>
+<script src="src/engine/conditions.js"></script>
+<script src="src/engine/engine.js"></script>
+<!-- 화면 -->
+<script src="src/ui/view.js"></script>
+<script src="src/ui/overlays.js"></script>
+<script src="src/ui/notebook.js"></script>
+<script src="src/ui/debug.js"></script>
+<script src="src/main.js"></script>
+</body>
+</html>
