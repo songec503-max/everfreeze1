@@ -1,16 +1,26 @@
-/* 추리 메모(NOTEBOOK) 페이지: 증거 목록 + 필수/선택 추리. 슬롯에 증거를 채워 "연결"하면 가설이 기록된다. */
+/* 추리 수첩(NOTEBOOK): 증거 목록 + 필수/선택 추리. 슬롯에 증거를 채워 "연결"하면 가설이 기록된다. */
 (function () {
   const EF = window.EF, UI = EF.UI, h = EF.h;
 
-  UI.mountNotebook = function (root) {
+  UI.openNotebook = function () {
+    if (UI.busy) return;
+    UI.busy = true;
+    const sc = h('div', 'scrim dim nbscrim'), panel = h('div', 'notebook');
+    sc.append(panel); UI.stage.append(sc);
     let active = null, picks = [], detail = null, message = '';
 
+    const close = () => { sc.remove(); UI.dismiss = null; UI.busy = false; UI.render(); };
+    UI.dismiss = close;
+    sc.onclick = e => { if (e.target === sc) close(); };
+
     function draw() {
-      root.innerHTML = '';
-      const panel = h('div', 'notebook');
+      panel.innerHTML = '';
+      const head = h('div', 'nb-head');
+      head.append(h('h2', '', '📓 추리 수첩'));
+      const x = h('button', 'btn', '닫기 (Esc)'); x.onclick = close; head.append(x);
       const cols = h('div', 'nb-cols');
       cols.append(drawEvidence(), drawDeductions());
-      panel.append(cols); root.append(panel);
+      panel.append(head, cols);
     }
 
     function drawEvidence() {
@@ -37,7 +47,7 @@
       if (detail) {
         const e = EF.EVIDENCE[detail];
         d.append(h('b', '', `${detail} · ${e.name}`), h('span', 'place', e.place), h('p', '', e.desc));
-      } else d.append(h('p', 'empty', '증거를 누르면 설명이 보입니다. 오른쪽에서 추리를 고른 뒤 증거를 누르면 슬롯에 채워집니다.'));
+      } else d.append(h('p', 'empty', '증거를 누르면 설명이 보입니다. 추리 카드를 선택한 뒤 증거를 누르면 슬롯에 채워집니다.'));
       left.append(d);
       return left;
     }
@@ -57,14 +67,11 @@
       const top = h('div', 'dtop');
       top.append(h('b', '', `${d.id} ${d.title}`), h('span', 'tag', solved ? '완료' : '미완료'));
       c.append(top);
-      if (solved) {
-        c.append(h('p', 'hypo', '가설: ' + d.hypo));
-        if (d.kind === 'final') c.append(h('p', 'sub', '(임시 안내) 아리아가 있는 도서관을 찾아가 보자.'));
-        return c;
-      }
+      if (solved) { c.append(h('p', 'hypo', '가설: ' + d.hypo)); if (d.kind === 'final') c.append(h('p', 'sub', '(임시 안내) 아리아가 있는 도서관을 찾아가 보자.')); return c; }
+
       if (d.kind === 'final') {
         const st = EF.finalStatus();
-        c.append(h('p', 'sub', `필수 추리 ${st.mains}/3 완료 · ${st.stageOk ? '조건 충족 ✔' : '아직 조건이 부족하다'}`));
+        c.append(h('p', 'sub', `필수 추리 ${st.mains}/3 완료 · ${st.stageOk ? '4단계 이상 ✔' : '4단계 이상 필요'}`));
         const b = h('button', 'btn primary small', '통합 추리 기록'); b.disabled = !st.ready;
         b.onclick = () => { const r = EF.tryFinal(); r.q.forEach(i => i.t === 'toast' && UI.toast(i.text, i.kind)); draw(); };
         c.append(b); return c;

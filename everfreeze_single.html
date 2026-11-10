@@ -12,9 +12,9 @@
   --font:'Pretendard','Noto Sans KR','Malgun Gothic','Apple SD Gothic Neo',system-ui,sans-serif;
 }
 *{box-sizing:border-box}
-html,body{margin:0;min-height:100%;font-family:var(--font);color:var(--ink)}
-#stagewrap{position:relative;width:100%;aspect-ratio:16/9;overflow:hidden;border-radius:6px;background:#000}
-#stage{position:absolute;left:0;top:0;width:1280px;height:720px;transform-origin:top left;overflow:hidden;background:#000;user-select:none}
+html,body{margin:0;height:100%;background:#1d1c26;overflow:hidden;font-family:var(--font);color:var(--ink)}
+#app{position:fixed;inset:0}
+#stage{position:absolute;left:50%;top:50%;width:1280px;height:720px;transform-origin:center;overflow:hidden;background:#000;user-select:none}
 button{font-family:inherit;cursor:pointer}
 
 /* 배경 */
@@ -38,8 +38,8 @@ button{font-family:inherit;cursor:pointer}
 /* 핫스팟 */
 .hotspots{position:absolute;inset:0}
 .hs{position:absolute;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;border:2px solid rgba(255,255,255,.55);border-radius:18px;background:rgba(255,255,255,.34);color:var(--ink);backdrop-filter:blur(1px);transition:transform .12s,background .12s,box-shadow .12s;padding:6px}
-.hs .ico{font-size:54px;line-height:1;filter:drop-shadow(0 2px 2px rgba(0,0,0,.18))}
-.hs .lbl{font-size:21px;font-weight:700;background:rgba(255,253,248,.92);border-radius:10px;padding:3px 10px;max-width:100%;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.15)}
+.hs .ico{font-size:46px;line-height:1;filter:drop-shadow(0 2px 2px rgba(0,0,0,.18))}
+.hs .lbl{font-size:16px;font-weight:700;background:rgba(255,253,248,.92);border-radius:10px;padding:3px 10px;max-width:100%;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.15)}
 .hs:hover{background:rgba(255,255,255,.62);transform:translateY(-3px) scale(1.02);box-shadow:0 8px 20px rgba(0,0,0,.2)}
 .hs:active{transform:scale(.98)}
 .hs-npc{border-radius:50% 50% 18px 18px / 40% 40% 18px 18px}
@@ -49,8 +49,30 @@ button{font-family:inherit;cursor:pointer}
 #stage.hints .hs.temp{border-style:dashed}
 #stage.hints .hs.temp::after{content:'임시';position:absolute;top:4px;right:6px;font-size:11px;font-weight:700;color:#fff;background:rgba(0,0,0,.45);border-radius:6px;padding:1px 6px}
 
+/* HUD */
+.hud{position:absolute;left:0;right:0;top:0;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;background:linear-gradient(180deg,rgba(30,28,45,.72),rgba(30,28,45,0));color:#fff;pointer-events:none}
+.hud>*{pointer-events:auto}
+.crumb{font-size:17px;font-weight:700;text-shadow:0 1px 3px rgba(0,0,0,.5)}
+.hud-right{display:flex;align-items:center;gap:10px}
+.pips{display:flex;align-items:center;gap:5px;margin-right:6px}
+.pip-label{font-size:14px;font-weight:600;margin-right:6px;text-shadow:0 1px 3px rgba(0,0,0,.5)}
+.pip{width:12px;height:12px;border-radius:50%;background:rgba(255,255,255,.28);border:1px solid rgba(255,255,255,.6)}
+.pip.on{background:#ff8f7a;border-color:#ffd3c9}
+.btn{border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:12px;padding:8px 14px;font-size:15px;font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,.15)}
+.btn:hover{background:#fff}
+.btn.on{background:#e9e4ff;border-color:var(--accent)}
+.btn.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+.btn.primary:disabled{opacity:.4;cursor:not-allowed}
+.btn.small{padding:5px 11px;font-size:14px}
+.btn.dev{opacity:.55;font-size:12px;padding:6px 8px}
+.btn.nb{position:relative}
+.badge{margin-left:7px;background:var(--accent);color:#fff;border-radius:10px;padding:1px 8px;font-size:13px}
+.back{position:absolute;left:18px;bottom:20px;z-index:5}
 
 /* 장소 소개말 / 토스트 / 배너 */
+.intro{position:absolute;left:50%;top:70px;transform:translateX(-50%);max-width:760px;background:rgba(35,32,52,.82);color:#fff;border-radius:14px;padding:10px 22px;font-size:17px;opacity:0;pointer-events:none}
+.intro.show{animation:introAnim 4.2s ease forwards}
+@keyframes introAnim{0%{opacity:0;transform:translate(-50%,-8px)}10%,80%{opacity:1;transform:translate(-50%,0)}100%{opacity:0}}
 .toasts{position:absolute;right:18px;top:70px;display:flex;flex-direction:column;gap:8px;align-items:flex-end;pointer-events:none;z-index:30}
 .toast{background:rgba(35,32,52,.92);color:#fff;padding:9px 16px;border-radius:12px;font-size:15px;animation:toastIn .25s ease}
 .toast.gain{background:#4a3fb5}
@@ -80,7 +102,7 @@ button{font-family:inherit;cursor:pointer}
 .textbox.dialogue .close{align-self:flex-end}
 
 /* 퍼즐 */
-.puzzle{width:100%;max-width:820px;margin:14px 0;background:var(--paper);border:2px solid var(--ink);border-radius:20px;padding:26px 30px;box-shadow:0 14px 40px rgba(0,0,0,.45)}
+.puzzle{width:720px;background:var(--paper);border:2px solid var(--ink);border-radius:20px;padding:26px 30px;box-shadow:0 14px 40px rgba(0,0,0,.45)}
 .puzzle h3{margin:0 0 8px;font-size:22px}
 .puzzle .prompt{margin:0 0 18px;font-size:18px;line-height:1.5}
 .parea{display:flex;flex-direction:column;gap:10px}
@@ -99,15 +121,15 @@ button{font-family:inherit;cursor:pointer}
 @keyframes shake{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
 
 /* 엔딩 */
-.ending{width:100%;max-width:700px;margin:14px 0;background:#f4f1ea;border:2px solid var(--ink);border-radius:20px;padding:34px 40px;text-align:center;line-height:1.7;box-shadow:0 14px 40px rgba(0,0,0,.45)}
+.ending{width:640px;background:#f4f1ea;border:2px solid var(--ink);border-radius:20px;padding:34px 40px;text-align:center;line-height:1.7;box-shadow:0 14px 40px rgba(0,0,0,.45)}
 .ending h2{margin:0 0 16px;font-size:26px}.ending p{margin:0;font-size:18px}.ending .btn{margin-top:22px}
 
 /* 추리 수첩 */
-.notebook{width:100%;background:var(--paper);border:2px solid var(--ink);border-radius:20px;padding:20px 26px;display:flex;flex-direction:column;box-shadow:0 14px 40px rgba(0,0,0,.45)}
+.notebook{width:1160px;height:640px;background:var(--paper);border:2px solid var(--ink);border-radius:20px;padding:20px 26px;display:flex;flex-direction:column;box-shadow:0 14px 40px rgba(0,0,0,.45)}
 .nb-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
 .nb-head h2{margin:0;font-size:24px}
-.nb-cols{display:grid;grid-template-columns:380px 1fr;gap:26px}
-.nb-left,.nb-right{padding-right:6px}
+.nb-cols{flex:1;display:grid;grid-template-columns:400px 1fr;gap:26px;min-height:0}
+.nb-left,.nb-right{overflow:auto;padding-right:6px}
 .nb-left h4,.nb-right h4{margin:12px 0 6px;font-size:15px;color:var(--ink2)}
 .evlist{display:flex;flex-wrap:wrap;gap:6px}
 .ev{border:1px solid var(--line);background:#fff;border-radius:10px;padding:6px 10px;font-size:14px}
@@ -128,7 +150,7 @@ button{font-family:inherit;cursor:pointer}
 .row{display:flex;gap:8px}
 
 /* DEV */
-.devpanel{position:absolute;right:12px;top:12px;width:360px;max-height:600px;overflow:auto;z-index:40;background:rgba(20,18,30,.94);color:#fff;border-radius:12px;padding:12px;font-size:12px;display:flex;flex-direction:column;gap:8px}
+.devpanel{position:absolute;right:12px;top:60px;width:360px;max-height:600px;overflow:auto;z-index:40;background:rgba(20,18,30,.94);color:#fff;border-radius:12px;padding:12px;font-size:12px;display:flex;flex-direction:column;gap:8px}
 .devpanel select{width:100%;padding:4px}
 .devev{display:flex;flex-wrap:wrap;gap:4px}
 .devev button{background:#333;color:#ddd;border:1px solid #555;border-radius:6px;padding:2px 6px;font-size:11px}
@@ -136,91 +158,10 @@ button{font-family:inherit;cursor:pointer}
 .devpanel .row button{background:#444;color:#fff;border:0;border-radius:6px;padding:4px 10px}
 .devflags{color:#bbb;line-height:1.5;word-break:break-all}
 
-/* ===== 사이트 틀 (옛날 홈페이지 느낌) ===== */
-body{background:#efe9dc;background-image:radial-gradient(rgba(120,100,70,.10) 1px,transparent 1px);background-size:14px 14px}
-#site{max-width:1280px;margin:0 auto;padding:18px 16px 28px}
-#masthead{background:#fffdf8;border:3px double #8a7b62;border-radius:8px;padding:16px 22px;text-align:center;box-shadow:3px 3px 0 rgba(90,75,50,.25)}
-.logo{font-size:40px;font-weight:800;letter-spacing:.18em;color:#4b3f63}
-.tagline{margin-top:6px;font-size:15px;color:var(--ink2)}
-#nav{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0;padding:8px 10px;background:#e4dcc9;border:2px solid #8a7b62;border-radius:8px}
-.navitem{padding:6px 14px;border:2px dotted #8a7b62;border-radius:8px;background:#fffdf8;color:var(--ink);text-decoration:none;font-weight:700;font-size:15px}
-.navitem:hover,.navitem.on{background:#e9e4ff;border-color:var(--accent);border-style:solid}
-.nav-memo{margin-left:auto}
-#page{background:#fffdf8;border:3px double #8a7b62;border-radius:8px;padding:14px 16px 18px;box-shadow:3px 3px 0 rgba(90,75,50,.25)}
-#crumbs{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:0 0 10px;font-size:14px;min-height:22px}
-#crumbs a{color:#3b5bb5}
-#crumbs .back{font-weight:700}
-#crumbs .sep{color:#aaa}
-#crumbs .crumb.now{font-weight:700}
-#caption{margin-top:14px;padding:6px 4px 0}
-#caption h2{margin:0 0 6px;font-size:24px;color:#4b3f63}
-#pintro{margin:0 0 8px;font-size:17px;line-height:1.6}
-.tip{margin:0;font-size:13px;color:var(--ink2)}
-.tip a{color:#3b5bb5}
-#foot{margin-top:14px;text-align:center;font-size:13px;color:var(--ink2)}
-#foot .sep{margin:0 10px;color:#bbb}
-.devlink{margin-left:12px;color:#aaa;font-size:11px}
-/* 단계가 오르면 사이트 틀도 조금씩 어긋난다 */
-body[data-stage="3"] #masthead .logo{letter-spacing:.14em}
-body[data-stage="4"] #masthead{border-style:dashed}
-body[data-stage="4"] .tagline{opacity:.75}
-body[data-stage="5"]{filter:grayscale(.55)}
-body[data-stage="5"] .tagline{letter-spacing:.3em}
-.banner{top:70px}
-
-/* ===== 페이지 이동형 레이아웃 ===== */
-#caption{margin:0 0 12px}
-#cols{display:grid;grid-template-columns:minmax(0,1fr) 240px;gap:16px;align-items:start}
-#side{background:#f4efe3;border:2px solid #cbbfa3;border-radius:10px;padding:12px 14px}
-#side h3{margin:0 0 8px;font-size:16px;color:#4b3f63;border-bottom:1px dashed #b9ad92;padding-bottom:6px}
-.sgroup{margin:10px 0}
-.sg-title{font-size:13px;font-weight:700;color:var(--ink2);margin-bottom:4px}
-.lk{display:block;padding:4px 6px;font-size:16px;color:#3b5bb5;text-decoration:underline;border-radius:6px}
-.lk:hover{background:#e9e4ff}
-.lk-npc{color:#2f6fb0}.lk-inspect{color:#a86a10}.lk-puzzle{color:#6a47b0}.lk-move{color:#2e7d54}
-.tip{margin:10px 0 0}
-#panel{margin-top:6px}
-#log{margin-top:14px;display:flex;flex-direction:column;gap:10px}
-.entry{border:1px solid var(--line);border-left:6px solid #b9ad92;background:#fff;border-radius:10px;padding:12px 16px;animation:rise .2s ease}
-.entry.text .body,.entry.say .body{font-size:19px;line-height:1.6}
-.entry .note{margin-top:6px;font-size:14px;color:var(--move);font-weight:700}
-.entry.say{display:flex;gap:16px;align-items:flex-start;border-left-color:var(--npc)}
-.entry.say .portrait{width:64px;height:64px;font-size:28px;flex:none}
-.entry.line{padding:7px 14px;font-size:15px;background:#f7f4ec;border-left-color:#cbbfa3}
-.entry.line.gain{background:#efeaff;border-left-color:var(--accent);color:#3a2f8a;font-weight:600}
-.entry.stagenote{background:#2d2438;color:#e8dcf5;border-left-color:#c9503c;font-size:15px}
-.dhead{display:flex;align-items:center;gap:10px;margin-bottom:6px}
-.dhead b{font-size:18px}.dhead .role{font-size:13px;color:var(--ink2)}
-.dhead .ctx{font-size:12px;background:#ece8ff;color:var(--accent);border-radius:8px;padding:2px 8px;font-weight:700}
-#memo .notebook{background:#fffdf8;border:2px solid #cbbfa3;box-shadow:none;margin-top:4px}
-@media (max-width:900px){#cols{grid-template-columns:1fr}.nb-cols{grid-template-columns:1fr}}
-
 </style>
 </head>
 <body>
-<div id="site">
-  <header id="masthead">
-    <div class="logo">EVERFREEZE</div>
-    <div class="tagline" id="tagline"></div>
-  </header>
-  <nav id="nav"></nav>
-  <main id="page">
-    <div id="crumbs"></div>
-    <section id="caption">
-      <h2 id="ptitle"></h2>
-      <p id="pintro"></p>
-    </section>
-    <div id="cols">
-      <div id="stagewrap"><div id="stage"></div></div>
-      <aside id="side"></aside>
-    </div>
-    <p class="tip" id="tip">그림 속이나 오른쪽 목록의 링크를 눌러 보세요. <a href="#" id="hintLink">클릭할 수 있는 곳 표시하기</a></p>
-    <section id="panel"></section>
-    <section id="log" aria-live="polite"></section>
-    <section id="memo"></section>
-  </main>
-  <footer id="foot"><span id="counter"></span><span class="sep">|</span><span>Best viewed on PC · 1280px 이상 권장</span><span id="devSlot"></span></footer>
-</div>
+<div id="app"><div id="stage"></div></div>
 <!-- 데이터 -->
 <script>
 /* 공통 문구 · 오류 단계 정의. 최종 문구는 여기서만 교체하면 된다. */
@@ -233,31 +174,6 @@ body[data-stage="5"] .tagline{letter-spacing:.3em}
     alreadyNoted: '이미 기록한 증거',
     endedBlocked: '더는 새로운 일이 일어나지 않는다.',
     npcPlaceholder: '000과 대화',
-    // 사이트 겉모습 문구. 오류 단계가 오를수록 문구가 조금씩 이상해진다(단계 숫자는 화면에 직접 노출하지 않음).
-    site: {
-      nav: [['홈', 'WORLD_MAP'], ['로즈메리', 'MAP_ROSEMARY'], ['글렌위버', 'MAP_GLENWEAVER'], ['루미나리아', 'MAP_LUMINARIA']],
-      tagline: {
-        1: '세 마을 안내 사이트에 오신 것을 환영합니다!',
-        2: '세 마을 안내 사이트에 오신 것을 환영합니다!',
-        3: '세 마을 안내 사이트에 오신 것을 환영합니다. 환영합니다.',
-        4: '세 마을 안내 사이트에 오… 것을 환영…니다.',
-        5: '환영합니다.'
-      },
-      counter: {
-        1: '오늘의 방문자 127번째 이웃님',
-        2: '오늘의 방문자 127번째 이웃님',
-        3: '오늘의 방문자 127번째 이웃님 (어제도)',
-        4: '오늘의 방문자 127번째 이웃님 (언제나)',
-        5: '오늘의 방문자 127번째 이웃님'
-      },
-      memoName: '추리 메모',
-      memoIntro: '모은 증거를 이어 붙여 생각을 정리하는 페이지입니다.',
-      sideTitle: '이 페이지에서',
-      sideGroups: { move: '🚪 갈 수 있는 곳', npc: '💬 이야기 나누기', inspect: '🔍 살펴보기', puzzle: '🧩 풀어보기' },
-      worldIntro: '세 마을 중 가고 싶은 곳을 눌러 보세요.',
-      mapIntro: '마을의 장소를 눌러 들어가 보세요.',
-      stageNotice: '세계의 무언가가 어긋났다.'
-    },
     stages: {
       1: { name: '일상', desc: '도서관 입구가 막혀 있다' },
       2: { name: '비일상 초기', desc: '도서관 열람실이 열렸다' },
@@ -846,13 +762,9 @@ body[data-stage="5"] .tagline{letter-spacing:.3em}
 </script>
 <!-- 화면 -->
 <script>
-/* 화면(View): 옛날 홈페이지식 "페이지 이동형".
-   - 장소 하나 = 페이지 하나 (주소 #장소ID, 브라우저 뒤로가기 동작)
-   - 페이지 구성: 제목·소개 → 그림(클릭 가능) + 오른쪽 링크 목록 → 기록(대사·조사 결과가 본문에 쌓임)
-   - 추리 메모는 별도 페이지(#MEMO). 팝업/오버레이는 쓰지 않는다. */
+/* 화면(View): 1280x720 고정 무대를 창 크기에 맞춰 축소/확대하고, 현재 장면을 그린다. */
 (function () {
   const EF = window.EF;
-  const $ = id => document.getElementById(id);
   const h = (tag, cls, text) => {
     const e = document.createElement(tag);
     if (cls) e.className = cls;
@@ -860,208 +772,175 @@ body[data-stage="5"] .tagline{letter-spacing:.3em}
     return e;
   };
   EF.h = h;
-  const UI = (EF.UI = { busy: false, hints: false, dismiss: null, visited: {}, shown: null, memoFrom: 'WORLD_MAP' });
-  let stage, wrap, sceneEl, wm, hsEl, navEl, crumbsEl, ptitle, pintro, tagline, counter, sideEl, nbCount, firstRender = true;
+  const UI = (EF.UI = { busy: false, hints: false, shown: null, dismiss: null });
+  let stage, sceneEl, wm, hsEl, crumb, pips, backBtn, nbBtn, nbBadge, introEl;
 
   UI.init = function () {
-    EF.SCENES.MEMO = EF.SCENES.MEMO || { id: 'MEMO', name: EF.TEXT.site.memoName, kind: 'memo', hotspots: [], bg: '#eee', intro: EF.TEXT.site.memoIntro };
-    stage = UI.stage = $('stage'); wrap = $('stagewrap');
-    navEl = $('nav'); crumbsEl = $('crumbs'); ptitle = $('ptitle'); pintro = $('pintro');
-    tagline = $('tagline'); counter = $('counter'); sideEl = $('side');
-    UI.panelEl = $('panel'); UI.logEl = $('log'); UI.memoEl = $('memo');
+    stage = UI.stage = document.getElementById('stage');
     stage.innerHTML = '';
     sceneEl = h('div', 'scene'); wm = h('div', 'wm'); sceneEl.append(wm);
+    const fx = h('div', 'fx');
     hsEl = h('div', 'hotspots');
-    stage.append(sceneEl, h('div', 'fx'), hsEl);
-    EF.Debug.init(stage);
-
-    EF.TEXT.site.nav.forEach(([label, id]) => {
-      const a = h('a', 'navitem', label); a.href = '#' + id; a.dataset.scene = id;
-      a.onclick = e => { e.preventDefault(); UI.goto(id); };
-      navEl.append(a);
-    });
-    const memo = h('a', 'navitem nav-memo', '📓 메모'); memo.href = '#MEMO'; nbCount = h('b', '', '0');
-    memo.append(' (', nbCount, ')');
-    memo.onclick = e => { e.preventDefault(); UI.openMemo(); };
-    navEl.append(memo);
-
-    $('hintLink').onclick = e => {
-      e.preventDefault(); UI.hints = !UI.hints; stage.classList.toggle('hints', UI.hints);
-      e.target.textContent = UI.hints ? '클릭할 수 있는 곳 표시 끄기' : '클릭할 수 있는 곳 표시하기';
+    const hud = h('div', 'hud');
+    crumb = h('div', 'crumb');
+    const right = h('div', 'hud-right');
+    pips = h('div', 'pips');
+    const hintBtn = h('button', 'btn', '힌트 표시');
+    hintBtn.onclick = () => { UI.hints = !UI.hints; stage.classList.toggle('hints', UI.hints); hintBtn.classList.toggle('on', UI.hints); };
+    nbBtn = h('button', 'btn nb', '📓 추리 수첩');
+    nbBadge = h('span', 'badge', '0'); nbBtn.append(nbBadge);
+    nbBtn.onclick = () => UI.openNotebook();
+    const devBtn = h('button', 'btn dev', 'DEV');
+    devBtn.onclick = () => EF.Debug.toggle();
+    right.append(pips, hintBtn, nbBtn, devBtn);
+    hud.append(crumb, right);
+    backBtn = h('button', 'btn back', '← 뒤로');
+    backBtn.onclick = () => {
+      if (UI.busy) return;
+      const sc = EF.SCENES[EF.state.scene];
+      if (sc.parent) { EF.state.scene = sc.parent; UI.render(); }
     };
-    if (/[?&]dev\b/.test(location.search)) {
-      const d = h('a', 'devlink', 'DEV'); d.href = '#'; d.onclick = e => { e.preventDefault(); EF.Debug.toggle(); };
-      $('devSlot').append(d);
-    }
-
+    introEl = h('div', 'intro');
+    UI.toastEl = h('div', 'toasts');
+    UI.bannerEl = h('div', 'banner');
+    stage.append(sceneEl, fx, hsEl, hud, backBtn, introEl, UI.toastEl, UI.bannerEl);
+    EF.Debug.init(stage);
+    UI.fit();
     addEventListener('resize', UI.fit);
     addEventListener('keydown', e => {
-      if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'd') { EF.Debug.toggle(); return; }
-      if (e.key === 'Escape' && UI.dismiss) { e.preventDefault(); UI.dismiss(); }
-    });
-    addEventListener('popstate', () => {
-      const id = location.hash.slice(1);
-      if (!EF.SCENES[id] || !UI.visited[id]) { history.replaceState(null, '', '#' + EF.state.scene); return; }
-      if (UI.dismiss) UI.dismiss();
-      if (id !== EF.state.scene) { if (EF.state.scene !== 'MEMO' && id === 'MEMO') UI.memoFrom = EF.state.scene; EF.state.scene = id; UI.render(true); }
+      if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') {
+        if (UI.dismiss) { e.preventDefault(); UI.dismiss(); }
+      } else if ((e.key === 'n' || e.key === 'N') && !UI.busy) UI.openNotebook();
     });
     UI.render();
-    UI.fit();
   };
 
   UI.fit = function () {
-    if (!wrap.clientWidth) return;           // 메모 페이지처럼 그림이 숨겨진 동안은 계산하지 않는다
-    const s = wrap.clientWidth / 1280;
-    wrap.style.height = Math.round(720 * s) + 'px';
-    stage.style.transform = `scale(${s})`;
+    const s = Math.min(innerWidth / 1280, innerHeight / 720);
+    stage.style.transform = `translate(-50%,-50%) scale(${s})`;
   };
 
-  UI.goto = function (id) {
-    if (!EF.SCENES[id] || id === EF.state.scene) return;
-    if (UI.dismiss) UI.dismiss();            // 열려 있는 퍼즐은 닫고 이동
-    if (EF.state.scene !== 'MEMO' && id === 'MEMO') UI.memoFrom = EF.state.scene;
-    EF.state.scene = id; UI.render();
-    scrollTo({ top: 0 });
-  };
-  UI.openMemo = function () { UI.goto(EF.state.scene === 'MEMO' ? UI.memoFrom : 'MEMO'); };
-
-  UI.activate = function (hp) { if (UI.busy) return; UI.run(EF.click(hp)); };
-
-  UI.render = function (fromHistory) {
-    const st = EF.state, sc = EF.SCENES[st.scene], stg = EF.getStage(), memo = sc.kind === 'memo';
-    UI.visited[sc.id] = true;
-    if (!fromHistory && location.hash !== '#' + sc.id) {
-      if (firstRender) history.replaceState(null, '', '#' + sc.id); else history.pushState(null, '', '#' + sc.id);
-    }
-    firstRender = false;
-    document.title = `${sc.name} · EVERFREEZE`;
-    stage.dataset.stage = stg; document.body.dataset.stage = stg;
-
-    // 페이지가 바뀌면 기록·패널 비우기
-    const changed = UI.shown !== sc.id;
-    UI.shown = sc.id;
-    if (changed) { UI.logEl.innerHTML = ''; UI.panelEl.innerHTML = ''; }
-
-    // 사이트 틀
-    tagline.textContent = EF.TEXT.site.tagline[stg];
-    counter.textContent = EF.TEXT.site.counter[stg];
-    nbCount.textContent = Object.keys(st.evidence).length;
-    [...navEl.querySelectorAll('.navitem')].forEach(a => {
-      const on = memo ? a.classList.contains('nav-memo')
-        : (a.dataset.scene === sc.id || (sc.village && a.textContent === sc.village));
-      a.classList.toggle('on', !!on);
-    });
-    const parentId = memo ? UI.memoFrom : sc.parent;
-    crumbsEl.innerHTML = '';
-    if (parentId) {
-      const b = h('a', 'back', memo ? '◀ 돌아가기' : '◀ 뒤로'); b.href = '#'; b.onclick = e => { e.preventDefault(); UI.goto(parentId); };
-      crumbsEl.append(b, h('span', 'sep', '|'));
-    }
-    const chain = []; if (!memo) for (let c = sc; c; c = EF.SCENES[c.parent]) chain.unshift(c); else chain.push(sc);
-    chain.forEach((c, i) => {
-      if (i) crumbsEl.append(h('span', 'sep', '›'));
-      if (i < chain.length - 1) {
-        const a = h('a', 'crumb', c.name); a.href = '#'; a.onclick = e => { e.preventDefault(); UI.goto(c.id); };
-        crumbsEl.append(a);
-      } else crumbsEl.append(h('span', 'crumb now', c.name));
-    });
-    ptitle.textContent = sc.name;
-    pintro.textContent = sc.intro || (sc.kind === 'world' ? EF.TEXT.site.worldIntro : EF.TEXT.site.mapIntro);
-
-    $('cols').style.display = memo ? 'none' : '';
-    $('tip').style.display = memo ? 'none' : '';
-    UI.memoEl.style.display = memo ? '' : 'none';
-    if (memo) { if (changed) UI.mountNotebook(UI.memoEl); return; }
-
-    // 그림 + 핫스팟
+  UI.render = function () {
+    const st = EF.state, sc = EF.SCENES[st.scene], stg = EF.getStage();
+    stage.dataset.stage = stg;
+    stage.dataset.kind = sc.kind;
     const img = EF.BG_IMAGES.includes(sc.id) ? `url(assets/bg/${sc.id}.png) center/cover no-repeat, ` : '';
     sceneEl.style.background = img + sc.bg;
     wm.textContent = sc.name;
-    UI.fit();                                 // 숨겨졌다 돌아온 경우에도 크기를 다시 맞춘다
-    hsEl.innerHTML = ''; sideEl.innerHTML = '';
-    sideEl.append(h('h3', '', EF.TEXT.site.sideTitle));
-    const groups = { move: [], npc: [], inspect: [], puzzle: [] };
+    // 이동 경로(월드맵 › 마을 › 장소)
+    const chain = []; for (let c = sc; c; c = EF.SCENES[c.parent]) chain.unshift(c.name);
+    crumb.textContent = chain.join('  ›  ');
+    // 오류 단계 표시
+    pips.innerHTML = '';
+    const lab = h('span', 'pip-label', `오류 ${stg}단계 · ${EF.TEXT.stages[stg].name}`);
+    pips.append(lab);
+    for (let i = 1; i <= 5; i++) pips.append(h('i', 'pip' + (i <= stg ? ' on' : '')));
+    nbBadge.textContent = Object.keys(st.evidence).length;
+    backBtn.style.display = sc.parent ? '' : 'none';
+    // 핫스팟
+    hsEl.innerHTML = '';
     sc.hotspots.forEach(hp => {
       if (!EF.check(hp.showIf)) return;
       const b = h('button', `hs hs-${hp.kind}` + (hp.temp ? ' temp' : ''));
       b.style.cssText = `left:${hp.x}px;top:${hp.y}px;width:${hp.w}px;height:${hp.h}px`;
       b.dataset.id = hp.id;
       b.append(h('span', 'ico', hp.icon), h('span', 'lbl', hp.label));
-      b.onclick = () => UI.activate(hp);
+      b.onclick = () => { if (UI.busy) return; UI.run(EF.click(hp)); };
       hsEl.append(b);
-      const a = h('a', 'lk lk-' + hp.kind, `${hp.icon} ${hp.label}`); a.href = '#'; a.dataset.id = hp.id;
-      a.onclick = e => { e.preventDefault(); UI.activate(hp); };
-      groups[hp.kind].push(a);
     });
-    Object.keys(groups).forEach(k => {
-      if (!groups[k].length) return;
-      const g = h('div', 'sgroup'); g.append(h('div', 'sg-title', EF.TEXT.site.sideGroups[k]));
-      groups[k].forEach(a => g.append(a)); sideEl.append(g);
-    });
+    // 장소 소개말(장소 진입 시 자동)
+    if (UI.shown !== sc.id) {
+      UI.shown = sc.id;
+      if (sc.intro) {
+        introEl.textContent = sc.intro;
+        introEl.classList.remove('show'); void introEl.offsetWidth; introEl.classList.add('show');
+      } else introEl.classList.remove('show');
+    }
+  };
+
+  UI.toast = function (text, kind) {
+    const t = h('div', 'toast' + (kind ? ' ' + kind : ''), text);
+    UI.toastEl.append(t);
+    setTimeout(() => t.classList.add('out'), 2600);
+    setTimeout(() => t.remove(), 3200);
+  };
+
+  UI.banner = function (stg) {
+    const s = EF.TEXT.stages[stg];
+    UI.bannerEl.innerHTML = '';
+    UI.bannerEl.append(h('b', '', `세계의 무언가가 어긋났다 — ${stg}단계 · ${s.name}`), h('span', '', s.desc));
+    UI.bannerEl.classList.remove('show'); void UI.bannerEl.offsetWidth; UI.bannerEl.classList.add('show');
   };
 })();
 
 </script>
 <script>
-/* 본문 기록(조사·대화·알림) · 퍼즐 · 엔딩 · 큐 처리. 팝업 없이 모두 페이지 안에 글로 쌓인다. */
+/* 오버레이: 조사 텍스트(INSPECT) · 대화(DIALOGUE) · 퍼즐(PUZZLE) · 엔딩, 그리고 큐 처리. */
 (function () {
   const EF = window.EF, UI = EF.UI, h = EF.h;
 
-  function entry(cls) {
-    const e = h('div', 'entry ' + cls);
-    UI.logEl.append(e);
-    setTimeout(() => e.scrollIntoView({ block: 'nearest', behavior: 'smooth' }), 30);
-    return e;
+  function scrim() { const s = h('div', 'scrim'); UI.stage.append(s); return s; }
+  function closeWith(node, done) {
+    node.remove(); UI.dismiss = null; done();
   }
 
-  UI.showText = function (it) {
-    const e = entry('text');
-    if (it.who) e.append(h('div', 'who', it.who));
-    e.append(h('div', 'body', it.text));
-    if (it.note) e.append(h('div', 'note', '✔ ' + it.note));
+  UI.showText = function (it, done) {
+    const sc = scrim(), box = h('div', 'textbox');
+    if (it.who) box.append(h('div', 'who', it.who));
+    box.append(h('div', 'body', it.text));
+    if (it.note) box.append(h('div', 'note', '✔ ' + it.note));
+    box.append(h('div', 'next', '▼ 클릭'));
+    sc.append(box);
+    const close = () => closeWith(sc, done);
+    sc.onclick = close; UI.dismiss = close;
   };
 
-  UI.showSay = function (it) {
-    const n = EF.NPCS[it.npc], e = entry('say');
+  UI.showSay = function (it, done) {
+    const n = EF.NPCS[it.npc], sc = scrim(), box = h('div', 'textbox dialogue');
     const por = h('div', 'portrait', n.name[0]); por.style.background = n.color;
-    const col = h('div', 'dcol'), head = h('div', 'dhead');
+    const head = h('div', 'dhead');
     head.append(h('b', '', n.name), h('span', 'role', n.role));
     if (it.ctx) head.append(h('span', 'ctx', it.ctx));
-    col.append(head, h('div', 'body', EF.npcLine(it.npc)));
-    e.append(por, col);
+    const body = h('div', 'body', EF.npcLine(it.npc));
+    const btn = h('button', 'btn close', '닫기');
+    const col = h('div', 'dcol'); col.append(head, body);
+    box.append(por, col, btn);
+    sc.append(box);
+    const close = () => closeWith(sc, done);
+    btn.onclick = e => { e.stopPropagation(); close(); };
+    sc.onclick = e => { if (e.target === sc) close(); };
+    UI.dismiss = close;
   };
 
-  UI.toast = function (text, kind) { entry('line' + (kind ? ' ' + kind : '')).textContent = text; };
-  UI.banner = function () { entry('stagenote').textContent = '… ' + EF.TEXT.site.stageNotice; };
-
-  UI.showEnding = function () {
-    UI.panelEl.innerHTML = '';
+  UI.showEnding = function (done) {
+    const sc = scrim(); sc.classList.add('dim');
     const card = h('div', 'ending');
     card.append(h('h2', '', EF.TEXT.ending.title));
     EF.TEXT.ending.body.split('\n').forEach(l => card.append(h('p', '', l || ' ')));
     const b = h('button', 'btn primary', EF.TEXT.ending.btn);
-    b.onclick = () => { UI.panelEl.innerHTML = ''; };
-    card.append(b); UI.panelEl.append(card);
-    setTimeout(() => card.scrollIntoView({ block: 'nearest', behavior: 'smooth' }), 30);
+    card.append(b); sc.append(card);
+    const close = () => closeWith(sc, done);
+    b.onclick = close; UI.dismiss = close;
   };
 
-  // ---------- 퍼즐 (페이지 안 패널) ----------
+  // ---------- 퍼즐 ----------
   UI.showPuzzle = function (pid, done) {
-    const p = EF.PUZZLES[pid];
-    UI.busy = true;
-    UI.panelEl.innerHTML = '';
+    const p = EF.PUZZLES[pid], sc = scrim(); sc.classList.add('dim');
     const card = h('div', 'puzzle');
     card.append(h('h3', '', p.title), h('p', 'prompt', p.prompt));
-    const msg = h('div', 'pmsg', ''), area = h('div', 'parea'), actions = h('div', 'pactions');
+    const msg = h('div', 'pmsg', '');
+    const area = h('div', 'parea');
+    const actions = h('div', 'pactions');
     const okBtn = h('button', 'btn primary', '확인'); okBtn.disabled = true;
     const cancel = h('button', 'btn', '닫기');
     actions.append(cancel, okBtn);
-    card.append(area, msg, actions); UI.panelEl.append(card);
-    setTimeout(() => card.scrollIntoView({ block: 'nearest', behavior: 'smooth' }), 30);
+    card.append(area, msg, actions); sc.append(card);
 
-    let ok = () => false;
-    const fail = () => { msg.textContent = p.fail; card.classList.remove('shake'); void card.offsetWidth; card.classList.add('shake'); };
+    let getAnswerOk = () => false;
 
+    function fail() {
+      msg.textContent = p.fail; card.classList.remove('shake'); void card.offsetWidth; card.classList.add('shake');
+    }
     if (p.type === 'pick') {
       let sel = -1;
       p.options.forEach((o, i) => {
@@ -1069,13 +948,13 @@ body[data-stage="5"] .tagline{letter-spacing:.3em}
         b.onclick = () => { sel = i; [...area.children].forEach((c, j) => c.classList.toggle('on', j === i)); okBtn.disabled = false; msg.textContent = ''; };
         area.append(b);
       });
-      ok = () => sel === p.answer;
+      getAnswerOk = () => sel === p.answer;
     } else if (p.type === 'order') {
       let seq = [];
       const seqEl = h('div', 'seq'), pool = h('div', 'pool');
       const draw = () => {
         seqEl.innerHTML = ''; pool.innerHTML = '';
-        p.items.forEach((_, i) => {
+        p.items.forEach((_, i) => { // slots
           const slot = h('div', 'slot', seq[i] !== undefined ? p.items[seq[i]] : String(i + 1));
           if (seq[i] !== undefined) slot.classList.add('filled');
           seqEl.append(slot);
@@ -1090,40 +969,36 @@ body[data-stage="5"] .tagline{letter-spacing:.3em}
         okBtn.disabled = seq.length !== p.items.length;
       };
       area.append(seqEl, pool); draw();
-      ok = () => seq.every((v, i) => v === i);
+      getAnswerOk = () => seq.every((v, i) => v === i);
     } else if (p.type === 'code') {
       const inp = h('input', 'code'); inp.maxLength = p.digits || 4; inp.inputMode = 'numeric'; inp.placeholder = '숫자 입력';
       inp.oninput = () => { inp.value = inp.value.replace(/\D/g, ''); okBtn.disabled = !inp.value; msg.textContent = ''; };
-      inp.onkeydown = e => { if (e.key === 'Enter' && !okBtn.disabled) okBtn.click(); };
-      area.append(inp); setTimeout(() => inp.focus({ preventScroll: true }), 30);
-      ok = () => inp.value === p.answer;
+      inp.onkeydown = e => { e.stopPropagation(); if (e.key === 'Enter' && !okBtn.disabled) okBtn.click(); };
+      area.append(inp); setTimeout(() => inp.focus(), 30);
+      getAnswerOk = () => inp.value === p.answer;
     }
 
-    const close = solved => {
-      UI.panelEl.innerHTML = ''; UI.dismiss = null; UI.busy = false;
-      done(solved ? EF.solvePuzzle(pid) : []);
-    };
-    okBtn.onclick = () => { if (ok()) close(true); else fail(); };
+    const close = (solved) => { sc.remove(); UI.dismiss = null; done(solved ? EF.solvePuzzle(pid) : []); };
+    okBtn.onclick = () => { if (getAnswerOk()) close(true); else fail(); };
     cancel.onclick = () => close(false);
     UI.dismiss = () => close(false);
   };
 
   // ---------- 큐 처리 ----------
   UI.run = function (queue) {
+    UI.busy = true;
     UI.render();
     const next = () => {
-      for (;;) {
-        const it = queue.shift();
-        if (!it) { UI.render(); return; }
-        switch (it.t) {
-          case 'toast': UI.toast(it.text, it.kind); break;
-          case 'text': UI.showText(it); break;
-          case 'say': UI.showSay(it); break;
-          case 'stage': UI.render(); UI.banner(); break;
-          case 'ending': UI.render(); UI.showEnding(); break;
-          case 'puzzle': UI.showPuzzle(it.id, q => { queue.unshift(...q); next(); }); return;
-        }
-        UI.render();
+      const it = queue.shift();
+      if (!it) { UI.busy = false; UI.render(); return; }
+      switch (it.t) {
+        case 'toast': UI.toast(it.text, it.kind); UI.render(); next(); break;
+        case 'text': UI.showText(it, next); break;
+        case 'say': UI.showSay(it, next); break;
+        case 'puzzle': UI.showPuzzle(it.id, q => { queue.unshift(...q); next(); }); break;
+        case 'stage': UI.render(); UI.banner(it.stage); next(); break;
+        case 'ending': UI.render(); UI.showEnding(next); break;
+        default: next();
       }
     };
     next();
@@ -1132,19 +1007,29 @@ body[data-stage="5"] .tagline{letter-spacing:.3em}
 
 </script>
 <script>
-/* 추리 메모(NOTEBOOK) 페이지: 증거 목록 + 필수/선택 추리. 슬롯에 증거를 채워 "연결"하면 가설이 기록된다. */
+/* 추리 수첩(NOTEBOOK): 증거 목록 + 필수/선택 추리. 슬롯에 증거를 채워 "연결"하면 가설이 기록된다. */
 (function () {
   const EF = window.EF, UI = EF.UI, h = EF.h;
 
-  UI.mountNotebook = function (root) {
+  UI.openNotebook = function () {
+    if (UI.busy) return;
+    UI.busy = true;
+    const sc = h('div', 'scrim dim nbscrim'), panel = h('div', 'notebook');
+    sc.append(panel); UI.stage.append(sc);
     let active = null, picks = [], detail = null, message = '';
 
+    const close = () => { sc.remove(); UI.dismiss = null; UI.busy = false; UI.render(); };
+    UI.dismiss = close;
+    sc.onclick = e => { if (e.target === sc) close(); };
+
     function draw() {
-      root.innerHTML = '';
-      const panel = h('div', 'notebook');
+      panel.innerHTML = '';
+      const head = h('div', 'nb-head');
+      head.append(h('h2', '', '📓 추리 수첩'));
+      const x = h('button', 'btn', '닫기 (Esc)'); x.onclick = close; head.append(x);
       const cols = h('div', 'nb-cols');
       cols.append(drawEvidence(), drawDeductions());
-      panel.append(cols); root.append(panel);
+      panel.append(head, cols);
     }
 
     function drawEvidence() {
@@ -1171,7 +1056,7 @@ body[data-stage="5"] .tagline{letter-spacing:.3em}
       if (detail) {
         const e = EF.EVIDENCE[detail];
         d.append(h('b', '', `${detail} · ${e.name}`), h('span', 'place', e.place), h('p', '', e.desc));
-      } else d.append(h('p', 'empty', '증거를 누르면 설명이 보입니다. 오른쪽에서 추리를 고른 뒤 증거를 누르면 슬롯에 채워집니다.'));
+      } else d.append(h('p', 'empty', '증거를 누르면 설명이 보입니다. 추리 카드를 선택한 뒤 증거를 누르면 슬롯에 채워집니다.'));
       left.append(d);
       return left;
     }
@@ -1191,14 +1076,11 @@ body[data-stage="5"] .tagline{letter-spacing:.3em}
       const top = h('div', 'dtop');
       top.append(h('b', '', `${d.id} ${d.title}`), h('span', 'tag', solved ? '완료' : '미완료'));
       c.append(top);
-      if (solved) {
-        c.append(h('p', 'hypo', '가설: ' + d.hypo));
-        if (d.kind === 'final') c.append(h('p', 'sub', '(임시 안내) 아리아가 있는 도서관을 찾아가 보자.'));
-        return c;
-      }
+      if (solved) { c.append(h('p', 'hypo', '가설: ' + d.hypo)); if (d.kind === 'final') c.append(h('p', 'sub', '(임시 안내) 아리아가 있는 도서관을 찾아가 보자.')); return c; }
+
       if (d.kind === 'final') {
         const st = EF.finalStatus();
-        c.append(h('p', 'sub', `필수 추리 ${st.mains}/3 완료 · ${st.stageOk ? '조건 충족 ✔' : '아직 조건이 부족하다'}`));
+        c.append(h('p', 'sub', `필수 추리 ${st.mains}/3 완료 · ${st.stageOk ? '4단계 이상 ✔' : '4단계 이상 필요'}`));
         const b = h('button', 'btn primary small', '통합 추리 기록'); b.disabled = !st.ready;
         b.onclick = () => { const r = EF.tryFinal(); r.q.forEach(i => i.t === 'toast' && UI.toast(i.text, i.kind)); draw(); };
         c.append(b); return c;
